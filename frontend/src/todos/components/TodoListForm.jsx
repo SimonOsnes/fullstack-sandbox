@@ -62,7 +62,8 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
             </Button>
             <Button type='submit' variant='contained' color='primary'>
               Save
-            </Button>
+            </Button> 
+            {/* TODO Move type='submit' to input fields to autosave?*/}
           </CardActions>
         </form>
       </CardContent>

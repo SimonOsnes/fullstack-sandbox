@@ -3,21 +3,29 @@ import { Card, CardContent, List, ListItem, ListItemText, ListItemIcon, Typograp
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import { TodoListForm } from './TodoListForm'
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+// const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+const BASE_URL = "http://localhost:3001/"
 
 const getPersonalTodos = () => {
-  return sleep(1000).then(() => Promise.resolve({
-    '0000000001': {
-      id: '0000000001',
-      title: 'First List',
-      todos: ['First todo of first list!']
-    },
-    '0000000002': {
-      id: '0000000002',
-      title: 'Second List',
-      todos: ['First todo of second list!']
-    }
-  }))
+  
+  return fetch(BASE_URL, {
+    "method": "GET"
+  })
+    .then(response =>{
+      if(!response.ok) {
+        throw new Error(response.statusText)
+      }
+      return response
+    })
+    .then(response => response.json())
+}
+
+const sendData = todoLists => {
+  fetch("http://localhost:3001/post", {
+    "method": "POST",
+    headers: {'Content-Type': 'application/json'}, 
+    body: JSON.stringify(todoLists)
+  })
 }
 
 export const TodoLists = ({ style }) => {
@@ -61,6 +69,9 @@ export const TodoLists = ({ style }) => {
           ...todoLists,
           [id]: { ...listToUpdate, todos }
         })
+  
+        //TODO Make api call to backend to save the data
+        sendData({...listToUpdate, todos})
       }}
     />}
   </Fragment>
