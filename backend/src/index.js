@@ -37,12 +37,12 @@ var jsonObject = {
     }
 }
 
-app.get('/', (req, res) => {
+app.get('/todolist', (req, res) => {
     console.log("Sending jsonObject...")
     res.json(jsonObject)
 })
 
-app.post('/post', (req, res) => {
+app.post('/todolist', (req, res) => {
     console.log("Retreiving POST request...")
 
     // Update jsonObject here

@@ -2,14 +2,26 @@ import React, { useState } from 'react'
 import { TextField, Card, CardContent, CardActions, Button, Typography} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 
 // Helper function to compare the dueDate with todays date
 // and write out the correct response
 const getDiffInDays = (dueDate, isDone) => {
+  // If the task is completed, no need for more work
   if (isDone) {
     return (
-      <Typography sx={{margin: '8px'}} variant='h6'>
+      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6'>
         {"Task done"}
+      </Typography> 
+    )
+  }
+
+  // If due date is removed, it should not crash 
+  if (!dueDate) {
+    return (
+      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6'>
+        {"No due date"}
       </Typography> 
     )
   }
@@ -20,23 +32,31 @@ const getDiffInDays = (dueDate, isDone) => {
 
   if (today <= dueDate2) {
     return (
-      <Typography sx={{margin: '8px'}} variant='h6'>
+      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6'>
         {"Due in " + Math.ceil((dueDate2 - today)/ONE_DAY) + " day(s)"}
       </Typography>   
     )
   } else if (today.toISOString().slice(0, 10) === dueDate2.toISOString().slice(0, 10)) {
     return (
-      <Typography sx={{margin: '8px'}} variant='h6' >
+      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6' >
         {"Due today!"}
       </Typography>   
     )
   }
-  // else-clause 
+  // else-clause
   return (
-    <Typography sx={{margin: '8px'}} variant='h6' color="red">
+    <Typography sx={{margin: '8px', minWidth: 150}} variant='h6' color="red">
       {"Late by " + Math.floor((today - dueDate2)/ONE_DAY) + " day(s)"}
     </Typography>
   )
+}
+
+const pickCheckbox = isDone => {
+  if (isDone) {
+    return <CheckBoxIcon/>
+  }
+  // else-clause
+  return <CheckBoxOutlineBlankIcon/>
 }
 
 export const TodoListForm = ({ todoList, saveTodoList }) => {
@@ -60,8 +80,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 {index + 1}
               </Typography>
               <TextField
-                style={{width: 100}}
-                sx={{flexGrow: 1, marginTop: '1rem'}}
+                sx={{flexGrow: 1, marginTop: '1rem', margin: '8px'}}
                 label='What to do?'                
                 value={obj.title}
                 onChange={event => {
@@ -85,21 +104,24 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                   ])
                 }} 
               />
-              <div>
-                {getDiffInDays(obj.dueDate, obj.isDone)}
-              </div>
               {/* Possibility to mark a todo as complete */}
-              <input 
-                type="checkbox" 
-                defaultChecked={obj.isDone} 
-                onChange={() => {
+              <Button
+                sx={{margin: '8px'}}
+                size='small'
+                color='secondary'
+                onClick={() => {
                   setTodos([
                     ...todos.slice(0, index),
                     {title: obj.title, isDone: !obj.isDone, dueDate: obj.dueDate},
                     ...todos.slice(index + 1)
                   ])
-                }} 
-              />
+                }}
+              >
+                {pickCheckbox(obj.isDone)}
+              </Button>
+              {/* Display info on due date for todo */}
+              {getDiffInDays(obj.dueDate, obj.isDone)}
+              {/* Deletes a todo */}
               <Button
                 sx={{margin: '8px'}}
                 size='small'
@@ -128,7 +150,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
             <Button type='submit' variant='contained' color='primary'>
               Save
             </Button> 
-            {/* TODO Move type='submit' to input fields to autosave?*/}
           </CardActions>
         </form>
       </CardContent>

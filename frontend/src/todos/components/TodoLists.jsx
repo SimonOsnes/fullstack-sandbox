@@ -4,7 +4,7 @@ import ReceiptIcon from '@mui/icons-material/Receipt'
 import { TodoListForm } from './TodoListForm'
 
 // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-const BASE_URL = "http://localhost:3001/"
+const BASE_URL = "http://localhost:3001/todolist"
 
 const getPersonalTodos = () => {
   
@@ -21,7 +21,7 @@ const getPersonalTodos = () => {
 }
 
 const sendData = todoLists => {
-  fetch("http://localhost:3001/post", {
+  fetch(BASE_URL, {
     "method": "POST",
     headers: {'Content-Type': 'application/json'}, 
     body: JSON.stringify(todoLists)
@@ -70,7 +70,7 @@ export const TodoLists = ({ style }) => {
           [id]: { ...listToUpdate, todos }
         })
   
-        //TODO Make api call to backend to save the data
+        //Make api call to backend to save the data
         sendData({...listToUpdate, todos})
       }}
     />}
