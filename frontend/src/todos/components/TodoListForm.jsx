@@ -4,14 +4,15 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import Tooltip from '@mui/material/Tooltip'
 
 // Helper function to compare the dueDate with todays date
 // and write out the correct response
-const getDiffInDays = (dueDate, isDone) => {
+const getInfoText = (dueDate, isDone) => {
   // If the task is completed, no need for more work
   if (isDone) {
     return (
-      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6'>
+      <Typography sx={{margin: '8px', width: 175}} variant='h6'>
         {"Task done"}
       </Typography> 
     )
@@ -20,7 +21,7 @@ const getDiffInDays = (dueDate, isDone) => {
   // If due date is removed, it should not crash 
   if (!dueDate) {
     return (
-      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6'>
+      <Typography sx={{margin: '8px', width: 175}} variant='h6'>
         {"No due date"}
       </Typography> 
     )
@@ -32,20 +33,20 @@ const getDiffInDays = (dueDate, isDone) => {
 
   if (today <= dueDate2) {
     return (
-      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6'>
+      <Typography sx={{margin: '8px', width: 175}} variant='h6'>
         {"Due in " + Math.ceil((dueDate2 - today)/ONE_DAY) + " day(s)"}
       </Typography>   
     )
   } else if (today.toISOString().slice(0, 10) === dueDate2.toISOString().slice(0, 10)) {
     return (
-      <Typography sx={{margin: '8px', minWidth: 150}} variant='h6' >
+      <Typography sx={{margin: '8px', width: 175}} variant='h6' >
         {"Due today!"}
       </Typography>   
     )
   }
   // else-clause
   return (
-    <Typography sx={{margin: '8px', minWidth: 150}} variant='h6' color="red">
+    <Typography sx={{margin: '8px', width: 175}} variant='h6' color="red">
       {"Late by " + Math.floor((today - dueDate2)/ONE_DAY) + " day(s)"}
     </Typography>
   )
@@ -92,10 +93,15 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 }}
               />
               {/* Pick due date for todo */}
-              <input 
-                sx={{margin: '8px'}}
-                type="date" 
+              <TextField
+                id="date"
+                label="Due Date"
+                type="date"
                 defaultValue={obj.dueDate}
+                sx={{ width: 150 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 onChange={event => {
                   setTodos([
                     ...todos.slice(0, index),
@@ -105,22 +111,24 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 }} 
               />
               {/* Possibility to mark a todo as complete */}
-              <Button
-                sx={{margin: '8px'}}
-                size='small'
-                color='secondary'
-                onClick={() => {
-                  setTodos([
-                    ...todos.slice(0, index),
-                    {title: obj.title, isDone: !obj.isDone, dueDate: obj.dueDate},
-                    ...todos.slice(index + 1)
-                  ])
-                }}
-              >
-                {pickCheckbox(obj.isDone)}
-              </Button>
+              <Tooltip placement='bottom' title='Check the box if todo is completed'>
+                <Button
+                  sx={{margin: '8px'}}
+                  size='small'
+                  color='secondary'
+                  onClick={() => {
+                    setTodos([
+                      ...todos.slice(0, index),
+                      {title: obj.title, isDone: !obj.isDone, dueDate: obj.dueDate},
+                      ...todos.slice(index + 1)
+                    ])
+                  }}
+                >
+                  {pickCheckbox(obj.isDone)}
+                </Button>
+              </Tooltip>
               {/* Display info on due date for todo */}
-              {getDiffInDays(obj.dueDate, obj.isDone)}
+              {getInfoText(obj.dueDate, obj.isDone)}
               {/* Deletes a todo */}
               <Button
                 sx={{margin: '8px'}}
