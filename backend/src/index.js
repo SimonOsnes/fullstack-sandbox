@@ -20,16 +20,35 @@ var jsonObject = {
   }
 }
 
+var jsonObject2 = {
+    '0000000001': {
+        id: '0000000001',
+        title: 'First List',
+        todos: [
+            {
+                title:'First todo of first list!',
+                isDone: false
+            }, 
+            {
+                title:'test second todo',
+                isDone: true
+            }
+        ]
+    }
+}
+
+console.log(jsonObject)
+
 app.get('/', (req, res) => {
     console.log("Sending jsonObject...")
-    res.json(jsonObject)
+    res.json(jsonObject2)
 })
 
 app.post('/post', (req, res) => {
     console.log("Retreiving POST request...")
 
     // Update jsonObject here
-    jsonObject[req.body.id] = req.body
+    jsonObject2[req.body.id] = req.body
     console.log("Updated jsonObject")
 
     res.status(200) // Send if request succeeded

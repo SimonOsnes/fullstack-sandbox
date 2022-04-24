@@ -18,22 +18,34 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
           {todoList.title}
         </Typography>
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', flexGrow: 1}}>
-          {todos.map((name, index) => (
+          {todos.map((obj, index) => (
             <div key={index} style={{display: 'flex', alignItems: 'center'}}>
               <Typography sx={{margin: '8px'}} variant='h6'>
                 {index + 1}
               </Typography>
               <TextField
                 sx={{flexGrow: 1, marginTop: '1rem'}}
-                label='What to do?'
-                value={name}
+                label='What to do?'                
+                value={obj.title}
                 onChange={event => {
                   setTodos([ // immutable update
                     ...todos.slice(0, index),
-                    event.target.value,
+                    {title: event.target.value, isDone: obj.isDone},
                     ...todos.slice(index + 1)
                   ])
                 }}
+              />
+              {/* Possibility to mark a todo as complete */}
+              <input 
+                type="checkbox" 
+                defaultChecked={obj.isDone} 
+                onChange={() => {
+                  setTodos([
+                    ...todos.slice(0, index),
+                    {title: obj.title, isDone: !obj.isDone},
+                    ...todos.slice(index + 1)
+                  ])
+                }} 
               />
               <Button
                 sx={{margin: '8px'}}
@@ -55,7 +67,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, ''])
+                setTodos([...todos, {title:'', isDone: false}])
               }}
             >
               Add Todo <AddIcon />
