@@ -2,63 +2,9 @@ import React, { useState } from 'react'
 import { TextField, Card, CardContent, CardActions, Button, Typography} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Tooltip from '@mui/material/Tooltip'
-
-// Helper function to compare the dueDate with todays date
-// and write out the correct response
-const getInfoText = (dueDate, isDone) => {
-  // If the task is completed, no need for more work
-  if (isDone) {
-    return (
-      <Typography sx={{margin: '8px', width: 175}} variant='h6'>
-        {"Task done"}
-      </Typography> 
-    )
-  }
-
-  // If due date is removed, it should not crash 
-  if (!dueDate) {
-    return (
-      <Typography sx={{margin: '8px', width: 175}} variant='h6'>
-        {"No due date"}
-      </Typography> 
-    )
-  }
-
-  var today = new Date()
-  var dueDate2 = new Date(dueDate)
-  const ONE_DAY = 1000 * 60 * 60 * 24;
-
-  if (today <= dueDate2) {
-    return (
-      <Typography sx={{margin: '8px', width: 175}} variant='h6'>
-        {"Due in " + Math.ceil((dueDate2 - today)/ONE_DAY) + " day(s)"}
-      </Typography>   
-    )
-  } else if (today.toISOString().slice(0, 10) === dueDate2.toISOString().slice(0, 10)) {
-    return (
-      <Typography sx={{margin: '8px', width: 175}} variant='h6' >
-        {"Due today!"}
-      </Typography>   
-    )
-  }
-  // else-clause
-  return (
-    <Typography sx={{margin: '8px', width: 175}} variant='h6' color="red">
-      {"Late by " + Math.floor((today - dueDate2)/ONE_DAY) + " day(s)"}
-    </Typography>
-  )
-}
-
-const pickCheckbox = isDone => {
-  if (isDone) {
-    return <CheckBoxIcon/>
-  }
-  // else-clause
-  return <CheckBoxOutlineBlankIcon/>
-}
+import { PickCheckbox } from './PickCheckbox'
+import { GetInfoText } from './GetInfoText'
 
 export const TodoListForm = ({ todoList, saveTodoList }) => {
   const [todos, setTodos] = useState(todoList.todos)
@@ -111,7 +57,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 }} 
               />
               {/* Possibility to mark a todo as complete */}
-              <Tooltip placement='bottom' title='Check the box if todo is completed'>
+              <Tooltip placement='bottom' title='Check the box if the todo is completed'>
                 <Button
                   sx={{margin: '8px'}}
                   size='small'
@@ -124,11 +70,17 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                     ])
                   }}
                 >
-                  {pickCheckbox(obj.isDone)}
+                  {/* Changes the checkmark */}
+                  <PickCheckbox
+                    isDone={obj.isDone}
+                  />
                 </Button>
               </Tooltip>
               {/* Display info on due date for todo */}
-              {getInfoText(obj.dueDate, obj.isDone)}
+              <GetInfoText
+                dueDate={obj.dueDate}
+                isDone={obj.isDone}
+              />
               {/* Deletes a todo */}
               <Button
                 sx={{margin: '8px'}}

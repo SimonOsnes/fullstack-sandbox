@@ -3,7 +3,6 @@ import { Card, CardContent, List, ListItem, ListItemText, ListItemIcon, Typograp
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import { TodoListForm } from './TodoListForm'
 
-// const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 const BASE_URL = "http://localhost:3001/todolist"
 
 const getPersonalTodos = () => {
