@@ -70,7 +70,7 @@ export const TodoLists = ({ style }) => {
         })
   
         //Make api call to backend to save the data
-        sendData({...listToUpdate, todos})
+        sendData({'id':id, todos})
       }}
     />}
   </Fragment>

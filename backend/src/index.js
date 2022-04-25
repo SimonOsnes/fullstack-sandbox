@@ -59,7 +59,7 @@ var jsonObject = {
                 title:'Repeat',
                 isDone: false,
                 dueDate: "2022-04-26"
-            },
+            }
         ]
     }
 }
@@ -75,7 +75,7 @@ app.post('/todolist', (req, res) => {
     console.log("Retreiving POST request...")
 
     // Update jsonObject here
-    jsonObject[req.body.id] = req.body
+    jsonObject[req.body.id].todos = req.body.todos
     console.log("Updated jsonObject")
 
     res.status(200) // Send if request succeeded
