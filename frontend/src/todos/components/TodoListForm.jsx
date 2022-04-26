@@ -91,6 +91,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
                   ])
+                  deleteTodo(todoList.id, index)
                 }}
               >
                 <DeleteIcon />
@@ -115,4 +116,12 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
       </CardContent>
     </Card>
   )
+}
+
+const deleteTodo = (id, indexToRemove) => {
+  fetch("http://localhost:3001/todolist/" + id, {
+    "method": "DELETE",
+    headers: {'Content-Type': 'application/json'}, 
+    body: JSON.stringify({ indexToRemove:indexToRemove })
+  })
 }

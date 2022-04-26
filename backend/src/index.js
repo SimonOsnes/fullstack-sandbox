@@ -71,14 +71,22 @@ app.get('/todolist', (req, res) => {
 })
 
 // Handle POST-requests
-app.post('/todolist', (req, res) => {
-    console.log("Retreiving POST request...")
+app.post('/todolist/:id', (req, res) => {
+    console.log("Receiving POST request...")
 
     // Update jsonObject here
-    jsonObject[req.body.id].todos = req.body.todos
+    jsonObject[req.params.id].todos = req.body.todos
     console.log("Updated jsonObject")
 
     res.status(200) // Send if request succeeded
+})
+
+// Handle DELETE-request
+app.delete('/todolist/:id', (req, res) => {
+    console.log("Todo deleted")
+    jsonObject[req.params.id].todos.splice(req.body.indexToRemove,1)
+
+    res.status(200)
 })
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))

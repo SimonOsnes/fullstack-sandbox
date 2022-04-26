@@ -19,8 +19,8 @@ const getPersonalTodos = () => {
     .then(response => response.json())
 }
 
-const sendData = todoLists => {
-  fetch(BASE_URL, {
+const sendData = (id, todoLists) => {
+  fetch(BASE_URL + '/' + id, {
     "method": "POST",
     headers: {'Content-Type': 'application/json'}, 
     body: JSON.stringify(todoLists)
@@ -70,7 +70,7 @@ export const TodoLists = ({ style }) => {
         })
   
         //Make api call to backend to save the data
-        sendData({'id':id, todos})
+        sendData(id, {todos})
       }}
     />}
   </Fragment>
